@@ -1,6 +1,80 @@
 {
+  "base": "http://localhost:3000/api/1",
   "models": {
+    "post": {
+      "id": {
+        "type": "number",
+        "required": true,
+        "default": null
+      },
+      "created": {
+        "type": "date",
+        "required": true,
+        "default": null
+      },
+      "modified": {
+        "type": "date",
+        "required": true,
+        "defualt": null
+      },
+      "author": {
+        "type": "string",
+        "required": true,
+        "default": ""
+      },
+      "title": {
+        "type": "string",
+        "required": true,
+        "default": ""
+      },
+      "content": {
+        "type": "string",
+        "required": false,
+        "default": ""
+      }
+    },
+    "posts": "list[post]"
   },
   "resources": {
+    "posts": {
+      "index": {
+        "description": "get all posts",
+        "path": "/posts",
+        "method": "get",
+        "params": {
+          "q": {
+            "type": "string",
+            "style": "query",
+            "required": false,
+            "default": null,
+            "description": "query expression"
+          }
+        },
+        "response": "list[post]",
+        "errors": {
+          "500": "server error"
+        }
+      },
+      "show": {
+        "description": "get post by id",
+        "path": "/posts/{post}",
+        "method": "get",
+        "params": {
+          "post": {
+            "type": "number",
+            "style": "path",
+            "required": true,
+            "default": null,
+            "description": "post id"
+          }
+        },
+        "response": "post",
+        "errors": {
+          "500": "server error",
+          "404": "post not found",
+          "400": "bad request"
+        }
+      }
+    }
   }
 }

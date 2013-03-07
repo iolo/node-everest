@@ -6,40 +6,58 @@ var
   express = require('express'),
   resource = require('express-resource');
 
-function configure(opts) {
-  // TODO: ...
+
+function Everest(config) {
+  this.config = config;
 }
 
-function docs() {
+Everest.prototype.docs = function () {
   var app = express();
   // TODO: ...
-  app.get('/', function(req, res) { res.send('docs!'); });
+  app.get('/', function (req, res) {
+    res.send('docs!');
+  });
   return app;
-}
+};
 
-function console() {
+Everest.prototype.console = function () {
   var app = express();
   // TODO: ...
-  app.get('/', function(req, res) { res.send('console!'); });
+  app.get('/', function (req, res) {
+    res.send('console!');
+  });
   return app;
-}
+};
 
-function server(resources) {
+Everest.prototype.server = function (modules, opts) {
   var app = express();
   // TODO: ...
-  app.get('/', function(req, res) { res.send('server!'); });
+  _.each(this.config.resources, function (resource, resourceId) {
+    var actions = modules[resourceId];
+    app.resource(resource.path, actions, opts);
+    _.each(resource, function (operation, operationId) {
+      var action = actions[operationId];
+      if (operationId) {
+        //...
+      }
+    });
+  });
+  app.get('/', function (req, res) {
+    res.send('server!');
+  });
   return app;
-}
+};
 
-function client() {
+Everest.prototype.client = function () {
   // TODO: ...
   // restler? request? or something...
+};
+
+function configure(config) {
+  return new Everest(config);
 }
 
 module.exports = {
-  configure: configure,
-  docs: docs,
-  console: console,
-  server: server,
-  client: client
+  Everest: Everest,
+  configure: configure
 };
